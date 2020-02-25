@@ -19,19 +19,35 @@ type GifAction = ReturnType<
   typeof loadTrendingGifs | typeof loadTrendingGifsSuccess
 >;
 
-export type GifSelectorState = {
+export type GifsState = {
+  isLoading: boolean;
   gifs: Gif[];
 };
 
-const initialState: Gif[] = [];
+export type GifSelectorState = {
+  gifs: GifsState;
+};
 
-export const gifsReducer: Reducer<Gif[], GifAction> = (
+const initialState: GifsState = {
+  gifs: [],
+  isLoading: false
+};
+
+export const gifsReducer: Reducer<GifsState, GifAction> = (
   state = initialState,
   action
 ) => {
   switch (action.type) {
+    case GifActionTypes.Load:
+      return {
+        ...state,
+        isLoading: true
+      };
     case GifActionTypes.LoadSuccess:
-      return action.payload;
+      return {
+        gifs: action.payload,
+        isLoading: false
+      };
     default:
       return state;
   }
