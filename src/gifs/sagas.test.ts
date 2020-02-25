@@ -3,6 +3,7 @@ import * as Matchers from "redux-saga-test-plan/matchers";
 import { fetchGifById } from "./api";
 import { loadGifSuccess, loadGifById } from "./redux";
 import { toRandomGif } from "./doubles";
+import { toGetGifById } from "./selectors";
 import { loadGifByIdSaga } from "./sagas";
 
 describe("loadGifByIdSaga", () => {
@@ -10,8 +11,27 @@ describe("loadGifByIdSaga", () => {
     const gif = toRandomGif();
 
     return expectSaga(loadGifByIdSaga, loadGifById("foo"))
+      .withState({ gifs: {} })
       .provide([[Matchers.call.fn(fetchGifById), gif]])
       .call(fetchGifById, "foo")
+      .put(loadGifSuccess(gif))
+      .run();
+  });
+
+  it("should not fetch gif if it has already been loaded", () => {
+    const gif = toRandomGif();
+
+    return expectSaga(loadGifByIdSaga, loadGifById("foo"))
+      .withState({
+        gifs: {
+          foo: {
+            data: gif,
+            isLoading: false
+          }
+        }
+      })
+      .provide([[Matchers.call.fn(fetchGifById), gif]])
+      .not.call(fetchGifById, "foo")
       .put(loadGifSuccess(gif))
       .run();
   });
