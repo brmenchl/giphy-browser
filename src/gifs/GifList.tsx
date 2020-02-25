@@ -1,8 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import { map } from "ramda";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components/macro";
-import { loadTrendingGifs } from "./redux";
+import Infinite from "react-infinite";
+import { loadTrendingGifs, loadMoreTrendingGifs } from "./redux";
 import { getAllGifIds, getIsLoadingGifs } from "./selectors";
 import { GifThumbnail } from "./GifThumbnail";
 
@@ -11,6 +12,10 @@ export const GifList: React.FC = () => {
   const gifIds = useSelector(getAllGifIds);
   const isLoading = useSelector(getIsLoadingGifs);
 
+  const handleInfiniteLoad = useCallback(() => {
+    dispatch(loadMoreTrendingGifs());
+  }, [dispatch]);
+
   useEffect(() => {
     dispatch(loadTrendingGifs());
   }, [dispatch]);
@@ -18,7 +23,12 @@ export const GifList: React.FC = () => {
   return isLoading ? (
     <LoadingMessage>Loading</LoadingMessage>
   ) : (
-    <List>
+    <List
+      containerHeight={1000}
+      elementHeight={200}
+      infiniteLoadBeginEdgeOffset={50}
+      onInfiniteLoad={handleInfiniteLoad}
+    >
       {map(
         id => (
           <GifThumbnail key={id} id={id} />
@@ -29,7 +39,7 @@ export const GifList: React.FC = () => {
   );
 };
 
-const List = styled.div`
+const List = styled(Infinite)`
   overflow: auto;
   width: 50%;
   margin: auto;

@@ -1,17 +1,32 @@
-import { call, put, takeLeading } from "redux-saga/effects";
+import { call, put, select, takeLatest, take } from "redux-saga/effects";
 import { fetchTrendingGifs } from "./api";
-import { Gif } from "./models";
-import { loadTrendingGifsSuccess, GifActionTypes } from "./redux";
+import { PaginatedGifs, GIF_LOAD_LIMIT } from "./models";
+import {
+  loadTrendingGifsSuccess,
+  GifActionTypes,
+  loadMoreTrendingGifsSuccess
+} from "./redux";
+import { getCurrentTrendingGifsOffset } from "./selectors";
 
 export const loadTrendingGifsSaga = function*() {
   try {
-    const trendingGifs: Gif[] = yield call(fetchTrendingGifs);
-    yield put(loadTrendingGifsSuccess(trendingGifs));
+    const paginatedGifs: PaginatedGifs = yield call(fetchTrendingGifs, 0);
+    yield put(loadTrendingGifsSuccess(paginatedGifs.gifs));
+
+    while (true) {
+      yield take(GifActionTypes.LoadMore);
+      const currentOffset: number = yield select(getCurrentTrendingGifsOffset);
+      const paginatedGifs: PaginatedGifs = yield call(
+        fetchTrendingGifs,
+        currentOffset + GIF_LOAD_LIMIT
+      );
+      yield put(loadMoreTrendingGifsSuccess(paginatedGifs));
+    }
   } catch (e) {
     // do nothing for now
   }
 };
 
 export const gifsWatcherSaga = function*() {
-  yield takeLeading(GifActionTypes.Load, loadTrendingGifsSaga);
+  yield takeLatest(GifActionTypes.Load, loadTrendingGifsSaga);
 };

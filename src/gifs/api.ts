@@ -1,6 +1,5 @@
 import axios from "axios";
-import { map } from "ramda";
-import { Gif } from "./models";
+import { Gif, GIF_LOAD_LIMIT, PaginatedGifs } from "./models";
 
 enum Rating {
   G = "G",
@@ -26,19 +25,31 @@ type ApiGif = {
   // ...
 };
 
-type TrendingGifApiResponse = {
-  data: ApiGif[];
-  // pagination: ApiPagination; Don't need for now
-  // meta: ApiMeta; Don't need
+type ApiPagination = {
+  offset: number;
+  count: number;
 };
 
-const toTrendingGifsUrl = ({ limit = 25, rating = Rating.G } = {}) =>
-  `https://api.giphy.com/v1/gifs/trending?api_key=${process.env.REACT_APP_GIPHY_API_KEY}&limit=${limit}&rating=${rating}`;
+type TrendingGifApiResponse = {
+  data: ApiGif[];
+  pagination: ApiPagination;
+};
 
-export const fetchTrendingGifs = () =>
+const toTrendingGifsUrl = ({ offset = 0, rating = Rating.G } = {}) =>
+  `https://api.giphy.com/v1/gifs/trending?api_key=${process.env.REACT_APP_GIPHY_API_KEY}&limit=${GIF_LOAD_LIMIT}&offset=${offset}&rating=${rating}`;
+
+export const fetchTrendingGifs = (offset: number) =>
   axios
-    .get<TrendingGifApiResponse>(toTrendingGifsUrl())
-    .then(response => map(toGif, response.data.data));
+    .get<TrendingGifApiResponse>(toTrendingGifsUrl({ offset }))
+    .then(response => toPaginatedGifs(response.data));
+
+const toPaginatedGifs = ({
+  data,
+  pagination
+}: TrendingGifApiResponse): PaginatedGifs => ({
+  gifs: data.map(toGif),
+  offset: pagination.offset
+});
 
 const toGif = (apiGif: ApiGif): Gif => ({
   id: apiGif.id,

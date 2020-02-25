@@ -15,5 +15,9 @@ export const toRandomGifsReducerState = (
 ): GifsState => ({
   isLoading: false,
   gifs: times(() => toRandomGif(), 5),
+  pagination: {
+    isLoading: false,
+    offset: 0
+  },
   ...mixin
 });

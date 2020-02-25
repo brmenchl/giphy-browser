@@ -15,4 +15,5 @@ export const GifThumbnail: React.FC<Props> = props => {
 
 const Image = styled.img`
   width: 100%;
+  height: 200px;
 `;
