@@ -1,1 +1,1 @@
-export { StyleReset } from './reset';
+export { StyleReset } from "./reset";
