@@ -3,7 +3,9 @@ import { map } from "ramda";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components/macro";
 import Infinite from "react-infinite";
+import { Link } from "react-router-dom";
 import { GifThumbnail } from "../gifs";
+import { toFullscreenViewUrl } from "../gifs/urls";
 import { loadTrendingGifs, loadMoreTrendingGifs } from "./redux";
 import { getAllGifIds, getIsLoadingGifs } from "./selectors";
 
@@ -31,7 +33,9 @@ export const GifList: React.FC = () => {
     >
       {map(
         id => (
-          <GifThumbnail key={id} id={id} />
+          <Link key={id} to={toFullscreenViewUrl(id)}>
+            <GifThumbnail id={id} />
+          </Link>
         ),
         gifIds
       )}

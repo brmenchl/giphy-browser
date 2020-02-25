@@ -1,14 +1,29 @@
 import React from "react";
 import { Provider } from "react-redux";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect
+} from "react-router-dom";
 import { StyleReset } from "./styles";
 import { store } from "./store";
-import { GifList } from "./gifs";
+import { gifListUrlScheme } from "./lists/urls";
+import { fullscreenViewUrlScheme } from "./gifs/urls";
+import { GifList } from "./lists";
+import { FullScreenView } from "./gifs";
 
 const App = () => (
   <>
     <StyleReset />
     <Provider store={store}>
-      <GifList />
+      <Router>
+        <Switch>
+          <Route exact path={gifListUrlScheme} component={GifList} />
+          <Route path={fullscreenViewUrlScheme} component={FullScreenView} />
+          <Redirect to={gifListUrlScheme} />
+        </Switch>
+      </Router>
     </Provider>
   </>
 );
