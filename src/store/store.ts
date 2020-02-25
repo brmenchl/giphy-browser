@@ -1,23 +1,24 @@
+import { compose } from "ramda";
 import createSagaMiddleware from "redux-saga";
+import sagaMonitor from "@redux-saga/simple-saga-monitor";
 import { createStore, applyMiddleware, StoreEnhancer } from "redux";
 import { rootReducer } from "./reducers";
 import { rootSaga } from "./sagas";
-import { compose } from "ramda";
 
-type WindowWithDevTools = Window & {
+type WindowWithReduxDevTools = Window & {
   __REDUX_DEVTOOLS_EXTENSION_COMPOSE__: () => StoreEnhancer<unknown, {}>;
 };
 
 const doesReduxDevtoolsExtenstionExist = (
-  w: Window | WindowWithDevTools
-): w is WindowWithDevTools => "__REDUX_DEVTOOLS_EXTENSION__" in w;
-
-const sagaMiddleware = createSagaMiddleware();
+  w: Window | WindowWithReduxDevTools
+): w is WindowWithReduxDevTools => "__REDUX_DEVTOOLS_EXTENSION__" in w;
 
 const composeEnhancers =
   typeof window !== "undefined" && doesReduxDevtoolsExtenstionExist(window)
     ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
     : compose;
+
+export const sagaMiddleware = createSagaMiddleware({ sagaMonitor });
 
 export const store = createStore(
   rootReducer,
