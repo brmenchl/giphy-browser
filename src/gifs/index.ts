@@ -1,3 +1,5 @@
-export { gifsReducer } from "./redux";
+export { gifsReducer, updateGifs, loadGifById } from "./redux";
 export { gifsWatcherSaga } from "./sagas";
-export { GifList } from "./GifList";
+export * from "./models";
+export * from "./selectors";
+export * from "./GifThumbnail";

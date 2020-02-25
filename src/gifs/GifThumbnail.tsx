@@ -10,7 +10,7 @@ type Props = {
 export const GifThumbnail: React.FC<Props> = props => {
   const getGifById = useCallback(toGetGifById(props.id), [props.id]);
   const gif = useSelector(getGifById);
-  return !!gif ? <Image src={gif.imageUrl} /> : null;
+  return !!gif?.data ? <Image src={gif.data.imageUrl} /> : null;
 };
 
 const Image = styled.img`

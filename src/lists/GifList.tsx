@@ -3,9 +3,9 @@ import { map } from "ramda";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components/macro";
 import Infinite from "react-infinite";
+import { GifThumbnail } from "../gifs";
 import { loadTrendingGifs, loadMoreTrendingGifs } from "./redux";
 import { getAllGifIds, getIsLoadingGifs } from "./selectors";
-import { GifThumbnail } from "./GifThumbnail";
 
 export const GifList: React.FC = () => {
   const dispatch = useDispatch();

@@ -1,100 +1,68 @@
+import { mergeDeepRight } from "ramda";
 import { Reducer } from "redux";
-import { Gif, PaginatedGifs } from "./models";
+import { GifWithLoadingState, Gif } from "./models";
 
 export enum GifActionTypes {
   Load = "gifs/load",
-  LoadMore = "gifs/loadMore",
   LoadSuccess = "gifs/loadSuccess",
-  LoadMoreSuccess = "gifs/loadMoreSuccess"
+  Update = "gifs/update"
 }
 
-export const loadTrendingGifs = () => ({
-  type: GifActionTypes.Load as const
+export const loadGifById = (id: string) => ({
+  type: GifActionTypes.Load as const,
+  payload: { id }
 });
 
-export const loadMoreTrendingGifs = () => ({
-  type: GifActionTypes.LoadMore as const
-});
-
-export const loadTrendingGifsSuccess = (gifs: Gif[]) => ({
+export const loadGifSuccess = (gif: Gif) => ({
   type: GifActionTypes.LoadSuccess as const,
-  payload: gifs
+  payload: { gif }
 });
 
-export const loadMoreTrendingGifsSuccess = (paginatedGifs: PaginatedGifs) => ({
-  type: GifActionTypes.LoadMoreSuccess as const,
-  payload: paginatedGifs
+export const updateGifs = (gifs: Gif[]) => ({
+  type: GifActionTypes.Update as const,
+  payload: { gifs }
 });
 
 type GifAction = ReturnType<
-  | typeof loadTrendingGifs
-  | typeof loadMoreTrendingGifs
-  | typeof loadTrendingGifsSuccess
-  | typeof loadMoreTrendingGifsSuccess
+  typeof loadGifById | typeof loadGifSuccess | typeof updateGifs
 >;
 
-type Pagination = {
-  isLoading: boolean;
-  offset: number;
-};
-
-export type GifsState = {
-  isLoading: boolean;
-  gifs: Gif[];
-  pagination: Pagination;
-};
+export type GifsState = Record<string, GifWithLoadingState>;
 
 export type GifSelectorState = {
   gifs: GifsState;
 };
 
-const initialState: GifsState = {
-  isLoading: false,
-  gifs: [],
-  pagination: {
-    isLoading: false,
-    offset: -1
-  }
-};
-
 export const gifsReducer: Reducer<GifsState, GifAction> = (
-  state = initialState,
+  state = {},
   action
 ) => {
   switch (action.type) {
     case GifActionTypes.Load:
       return {
         ...state,
-        isLoading: true
-      };
-    case GifActionTypes.LoadMore:
-      return {
-        ...state,
-        pagination: {
-          ...state.pagination,
+        [action.payload.id]: {
+          ...state[action.payload.id],
           isLoading: true
         }
       };
     case GifActionTypes.LoadSuccess:
       return {
         ...state,
-        isLoading: false,
-        gifs: action.payload,
-        pagination: {
-          isLoading: false,
-          offset: 0
+        [action.payload.gif.id]: {
+          data: action.payload.gif,
+          isLoading: false
         }
       };
-    case GifActionTypes.LoadMoreSuccess:
-      return {
-        ...state,
-        isLoading: false,
-        gifs: [...state.gifs, ...action.payload.gifs],
-        pagination: {
-          isLoading: false,
-          offset: action.payload.offset
-        }
-      };
+    case GifActionTypes.Update:
+      const newGifs = action.payload.gifs.reduce<GifsState>(
+        (acc, gif) => ({
+          ...acc,
+          [gif.id]: { data: gif, isLoading: false }
+        }),
+        {}
+      );
+      return mergeDeepRight(state, newGifs);
     default:
       return state;
   }
