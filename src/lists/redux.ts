@@ -4,34 +4,40 @@ import { Gif } from "../gifs";
 
 export enum GifListActionTypes {
   Load = "gifs/list/load",
+  LoadByQuery = "gifs/list/loadByQuery",
   LoadMore = "gifs/list/loadMore",
   LoadSuccess = "gifs/list/loadSuccess",
   LoadMoreSuccess = "gifs/list/loadMoreSuccess"
 }
 
-export const loadTrendingGifs = () => ({
+export const loadGifs = () => ({
   type: GifListActionTypes.Load as const
 });
 
-export const loadMoreTrendingGifs = () => ({
+export const loadGifsByQuery = (query: string) => ({
+  type: GifListActionTypes.LoadByQuery as const,
+  payload: { query }
+});
+
+export const loadMoreGifs = () => ({
   type: GifListActionTypes.LoadMore as const
 });
 
-export const loadTrendingGifsSuccess = (gifs: Gif[]) => ({
+export const loadGifsSuccess = (gifs: Gif[]) => ({
   type: GifListActionTypes.LoadSuccess as const,
   payload: { gifs }
 });
 
-export const loadMoreTrendingGifsSuccess = (paginatedGifs: PaginatedGifs) => ({
+export const loadMoreGifsSuccess = (paginatedGifs: PaginatedGifs) => ({
   type: GifListActionTypes.LoadMoreSuccess as const,
   payload: paginatedGifs
 });
 
 type GifListAction = ReturnType<
-  | typeof loadTrendingGifs
-  | typeof loadMoreTrendingGifs
-  | typeof loadTrendingGifsSuccess
-  | typeof loadMoreTrendingGifsSuccess
+  | typeof loadGifs
+  | typeof loadMoreGifs
+  | typeof loadGifsSuccess
+  | typeof loadMoreGifsSuccess
 >;
 
 type Pagination = {

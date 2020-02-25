@@ -20,7 +20,7 @@ export const getIsLoadingMoreGifs = createSelector(
   pagination => pagination.isLoading
 );
 
-export const getCurrentTrendingGifsOffset = createSelector(
+export const getCurrentGifsOffset = createSelector(
   getGifPagination,
   pagination => pagination.offset
 );

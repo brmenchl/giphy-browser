@@ -6,7 +6,7 @@ import Infinite from "react-infinite";
 import { Link } from "react-router-dom";
 import { GifThumbnail } from "../gifs";
 import { toFullscreenViewUrl } from "../gifs/urls";
-import { loadTrendingGifs, loadMoreTrendingGifs } from "./redux";
+import { loadGifs, loadMoreGifs } from "./redux";
 import { getAllGifIds, getIsLoadingGifs } from "./selectors";
 
 export const GifList: React.FC = () => {
@@ -15,11 +15,11 @@ export const GifList: React.FC = () => {
   const isLoading = useSelector(getIsLoadingGifs);
 
   const handleInfiniteLoad = useCallback(() => {
-    dispatch(loadMoreTrendingGifs());
+    dispatch(loadMoreGifs());
   }, [dispatch]);
 
   useEffect(() => {
-    dispatch(loadTrendingGifs());
+    dispatch(loadGifs());
   }, [dispatch]);
 
   return isLoading ? (

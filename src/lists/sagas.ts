@@ -3,30 +3,35 @@ import { updateGifs } from "../gifs";
 import { fetchTrendingGifs } from "./api";
 import { PaginatedGifs, GIF_LOAD_LIMIT } from "./models";
 import {
-  loadTrendingGifsSuccess,
+  loadGifsSuccess,
   GifListActionTypes,
-  loadMoreTrendingGifsSuccess
+  loadMoreGifsSuccess,
+  loadGifs
 } from "./redux";
-import { getCurrentTrendingGifsOffset } from "./selectors";
+import { getCurrentGifsOffset } from "./selectors";
 
 const loadTrendingGifsSaga = function*(isInitialLoad: boolean, offset: number) {
   const paginatedGifs: PaginatedGifs = yield call(fetchTrendingGifs, offset);
   if (isInitialLoad) {
-    yield put(loadTrendingGifsSuccess(paginatedGifs.gifs));
+    yield put(loadGifsSuccess(paginatedGifs.gifs));
   } else {
-    yield put(loadMoreTrendingGifsSuccess(paginatedGifs));
+    yield put(loadMoreGifsSuccess(paginatedGifs));
   }
   yield put(updateGifs(paginatedGifs.gifs));
 };
 
-export const trendingPaginationManagerSaga = function*() {
+export const paginationManagerSaga = function*() {
   try {
-    yield call(loadTrendingGifsSaga, true, 0);
+    yield call(loadGifsSaga, fetchGifs, true, 0);
 
     while (true) {
       yield take(GifListActionTypes.LoadMore);
-      const currentOffset: number = yield select(getCurrentTrendingGifsOffset);
-      yield call(loadTrendingGifsSaga, false, currentOffset + GIF_LOAD_LIMIT);
+      const currentOffset: number = yield select(getCurrentGifsOffset);
+      yield call(
+        loadGifsSaga,
+        false,
+        currentOffset + GIF_LOAD_LIMIT
+      );
     }
   } catch (e) {
     // do nothing for now
@@ -34,5 +39,8 @@ export const trendingPaginationManagerSaga = function*() {
 };
 
 export const gifListWatcherSaga = function*() {
-  yield takeLatest(GifListActionTypes.Load, trendingPaginationManagerSaga);
+  yield takeLatest(
+    GifListActionTypes.Load,
+    paginationManagerSaga
+  );
 };

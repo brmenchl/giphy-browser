@@ -6,7 +6,7 @@ type ApiPagination = {
   // count: number;
 };
 
-export type TrendingGifApiResponse = {
+export type GifListApiResponse = {
   data: ApiGif[];
   pagination: ApiPagination;
 };
@@ -14,7 +14,7 @@ export type TrendingGifApiResponse = {
 export const toPaginatedGifs = ({
   data,
   pagination
-}: TrendingGifApiResponse): PaginatedGifs => ({
+}: GifListApiResponse): PaginatedGifs => ({
   gifs: data.map(toGif),
   offset: pagination.offset
 });

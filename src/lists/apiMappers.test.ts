@@ -1,11 +1,11 @@
 import faker from "faker";
-import { toPaginatedGifs, TrendingGifApiResponse } from "./apiMappers";
+import { toPaginatedGifs, GifListApiResponse } from "./apiMappers";
 
 describe("toPaginatedGigs", () => {
   it("should map all gifs in the response and pagination offset", () => {
     const url1 = faker.image.image();
     const url2 = faker.image.image();
-    const response: TrendingGifApiResponse = {
+    const response: GifListApiResponse = {
       data: [
         {
           type: "gif",

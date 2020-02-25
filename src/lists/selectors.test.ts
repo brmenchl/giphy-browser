@@ -2,7 +2,7 @@ import { times } from "ramda";
 import {
   getAllGifIds,
   getIsLoadingMoreGifs,
-  getCurrentTrendingGifsOffset,
+  getCurrentGifsOffset,
   getIsLoadingGifs
 } from "./selectors";
 import { toRandomGifListReducerState } from "./doubles";
@@ -43,7 +43,7 @@ describe("gif selectors", () => {
           pagination: { isLoading: true, offset: 30 }
         })
       };
-      expect(getCurrentTrendingGifsOffset(state)).toEqual(30);
+      expect(getCurrentGifsOffset(state)).toEqual(30);
     });
   });
 });

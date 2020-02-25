@@ -1,4 +1,4 @@
-import { getCurrentTrendingGifsOffset } from "./selectors";
+import { getCurrentGifsOffset } from "./selectors";
 import { GIF_LOAD_LIMIT } from "./models";
 import { times } from "ramda";
 import { expectSaga } from "redux-saga-test-plan";
@@ -7,11 +7,11 @@ import { dynamic } from "redux-saga-test-plan/providers";
 import { fetchTrendingGifs } from "./api";
 import { toRandomGif } from "../gifs/doubles";
 import {
-  loadTrendingGifsSuccess,
-  loadMoreTrendingGifs,
+  loadGifsSuccess,
+  loadMoreGifs,
   loadMoreTrendingGifsSuccess
 } from "./redux";
-import { trendingPaginationManagerSaga } from "./sagas";
+import { paginationManagerSaga } from "./sagas";
 
 describe("loadTrendingGifsSaga", () => {
   it("should fetch initial trending gifs and dispatch a success action on success", () => {
@@ -21,10 +21,10 @@ describe("loadTrendingGifsSaga", () => {
       gifs
     };
 
-    return expectSaga(trendingPaginationManagerSaga)
+    return expectSaga(paginationManagerSaga)
       .provide([[Matchers.call(fetchTrendingGifs, 0), paginatedGifs]])
       .call(fetchTrendingGifs, 0)
-      .put(loadTrendingGifsSuccess(gifs))
+      .put(loadGifsSuccess(gifs))
       .silentRun(50);
   });
 
@@ -51,15 +51,15 @@ describe("loadTrendingGifsSaga", () => {
       .mockReturnValueOnce(paginatedGifs3);
 
     return (
-      expectSaga(trendingPaginationManagerSaga)
+      expectSaga(paginationManagerSaga)
         .provide([
           [Matchers.call.fn(fetchTrendingGifs), dynamic(mockGifResponse)],
-          [Matchers.select(getCurrentTrendingGifsOffset), 0]
+          [Matchers.select(getCurrentGifsOffset), 0]
         ])
         .call(fetchTrendingGifs, 0)
-        .put(loadTrendingGifsSuccess(paginatedGifs.gifs))
+        .put(loadGifsSuccess(paginatedGifs.gifs))
         // FETCHING NEXT CHUNK
-        .dispatch(loadMoreTrendingGifs())
+        .dispatch(loadMoreGifs())
         .call(fetchTrendingGifs, GIF_LOAD_LIMIT)
         .put(loadMoreTrendingGifsSuccess(paginatedGifs2))
         .silentRun(200)

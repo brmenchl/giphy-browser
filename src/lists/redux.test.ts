@@ -1,9 +1,9 @@
 import { times } from "ramda";
 import {
   gifListReducer,
-  loadTrendingGifsSuccess,
+  loadGifsSuccess,
   loadTrendingGifs,
-  loadMoreTrendingGifs,
+  loadMoreGifs,
   loadMoreTrendingGifsSuccess
 } from "./redux";
 import { toRandomGif } from "../gifs/doubles";
@@ -26,7 +26,7 @@ describe("gif list reducer", () => {
       }
     });
 
-    expect(gifListReducer(state, loadMoreTrendingGifs())).toEqual({
+    expect(gifListReducer(state, loadMoreGifs())).toEqual({
       ...state,
       pagination: {
         isLoading: true,
@@ -38,7 +38,7 @@ describe("gif list reducer", () => {
   it("should set ids and is loading to false on load success action", () => {
     const newGifs = times(idx => toRandomGif({ id: `id${idx}` }), 5);
     const state = toRandomGifListReducerState({ ids: [], isLoading: true });
-    expect(gifListReducer(state, loadTrendingGifsSuccess(newGifs))).toEqual({
+    expect(gifListReducer(state, loadGifsSuccess(newGifs))).toEqual({
       isLoading: false,
       ids: ["id0", "id1", "id2", "id3", "id4"],
       pagination: {
