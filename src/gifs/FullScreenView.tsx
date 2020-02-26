@@ -12,16 +12,18 @@ export const FullScreenView: React.FC<RouteComponentProps<{
   const dispatch = useDispatch();
   const getGifById = useCallback(toGetGifById(id), [id]);
   const gif = useSelector(getGifById);
+  const goBack = () => window.history.back();
 
   useEffect(() => {
     dispatch(loadGifById(id));
   }, [id, dispatch]);
 
   return gif?.data && !gif.isLoading ? (
-    <FullScreenImage src={gif.data.images.fullscreen} />
+    <FullScreenImage src={gif.data.images.fullscreen} onClick={goBack} />
   ) : null;
 };
 
 const FullScreenImage = styled.img`
   width: 100%;
+  cursor: pointer;
 `;
