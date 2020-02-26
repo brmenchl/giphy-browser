@@ -5,6 +5,8 @@ describe("toPaginatedGigs", () => {
   it("should map all gifs in the response and pagination offset", () => {
     const url1 = faker.image.image();
     const url2 = faker.image.image();
+    const url3 = faker.image.image();
+    const url4 = faker.image.image();
     const response: GifListApiResponse = {
       data: [
         {
@@ -16,6 +18,11 @@ describe("toPaginatedGigs", () => {
               height: 640,
               width: 480,
               url: url1
+            },
+            downsized_medium: {
+              height: 640,
+              width: 480,
+              url: url2
             }
           }
         },
@@ -27,7 +34,12 @@ describe("toPaginatedGigs", () => {
             original: {
               height: 640,
               width: 480,
-              url: url2
+              url: url3
+            },
+            downsized_medium: {
+              height: 640,
+              width: 480,
+              url: url4
             }
           }
         }
@@ -41,12 +53,18 @@ describe("toPaginatedGigs", () => {
       {
         id: "id1",
         title: "love this gif",
-        imageUrl: url1
+        images: {
+          fullscreen: url1,
+          thumb: url2
+        }
       },
       {
         id: "id2",
         title: "this is a good gif",
-        imageUrl: url2
+        images: {
+          fullscreen: url3,
+          thumb: url4
+        }
       }
     ]);
   });

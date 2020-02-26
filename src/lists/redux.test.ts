@@ -2,9 +2,9 @@ import { times } from "ramda";
 import {
   gifListReducer,
   loadGifsSuccess,
-  loadTrendingGifs,
+  loadGifs,
   loadMoreGifs,
-  loadMoreTrendingGifsSuccess
+  loadMoreGifsSuccess
 } from "./redux";
 import { toRandomGif } from "../gifs/doubles";
 import { toRandomGifListReducerState } from "./doubles";
@@ -12,7 +12,7 @@ import { toRandomGifListReducerState } from "./doubles";
 describe("gif list reducer", () => {
   it("should set is loading to true on load action", () => {
     const state = toRandomGifListReducerState();
-    expect(gifListReducer(state, loadTrendingGifs())).toEqual({
+    expect(gifListReducer(state, loadGifs())).toEqual({
       ...state,
       isLoading: true
     });
@@ -54,10 +54,7 @@ describe("gif list reducer", () => {
       pagination: { offset: 0, isLoading: true }
     });
     expect(
-      gifListReducer(
-        state,
-        loadMoreTrendingGifsSuccess({ offset: 5, gifs: [newGif] })
-      )
+      gifListReducer(state, loadMoreGifsSuccess({ offset: 5, gifs: [newGif] }))
     ).toEqual({
       ...state,
       ids: [...state.ids, newGif.id],

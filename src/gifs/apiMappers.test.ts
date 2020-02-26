@@ -3,7 +3,8 @@ import { toGif } from "./apiMappers";
 
 describe("toGif", () => {
   it("should map correctly", () => {
-    const url = faker.image.image();
+    const url1 = faker.image.image();
+    const url2 = faker.image.image();
     expect(
       toGif({
         type: "gif",
@@ -13,14 +14,22 @@ describe("toGif", () => {
           original: {
             height: 640,
             width: 480,
-            url: url
+            url: url1
+          },
+          downsized_medium: {
+            height: 80,
+            width: 80,
+            url: url2
           }
         }
       })
     ).toEqual({
       id: "id",
       title: "love this gif",
-      imageUrl: url
+      images: {
+        fullscreen: url1,
+        thumb: url2
+      }
     });
   });
 });

@@ -18,7 +18,7 @@ export const FullScreenView: React.FC<RouteComponentProps<{
   }, [id, dispatch]);
 
   return gif?.data && !gif.isLoading ? (
-    <FullScreenImage src={gif.data.imageUrl} />
+    <FullScreenImage src={gif.data.images.fullscreen} />
   ) : null;
 };
 

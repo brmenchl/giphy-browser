@@ -4,12 +4,13 @@ export type ApiGif = {
   type: "gif";
   id: string;
   title: string;
-  images: Record<ImageSize, ImageData>;
+  images: Record<ImageSize, ImageData>; // And other stuff that I don't need
   // ...
 };
 
 enum ImageSize {
-  Original = "original"
+  Original = "original", // fullscreen size
+  DownSizedMedium = "downsized_medium" // guaranteed under 5mb
   // ...
 }
 
@@ -22,6 +23,9 @@ type ImageData = {
 
 export const toGif = (apiGif: ApiGif): Gif => ({
   id: apiGif.id,
-  imageUrl: apiGif.images.original.url,
+  images: {
+    fullscreen: apiGif.images.original.url,
+    thumb: apiGif.images.downsized_medium.url
+  },
   title: apiGif.title
 });
