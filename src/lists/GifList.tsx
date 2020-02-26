@@ -8,6 +8,7 @@ import { GifThumbnail } from "../gifs";
 import { toFullscreenViewUrl } from "../gifs/urls";
 import { loadGifs, loadMoreGifs } from "./redux";
 import { getAllGifIds, getIsLoadingGifs } from "./selectors";
+import { SearchBar } from "./SearchBar";
 
 export const GifList: React.FC = () => {
   const dispatch = useDispatch();
@@ -22,24 +23,29 @@ export const GifList: React.FC = () => {
     dispatch(loadGifs());
   }, [dispatch]);
 
-  return isLoading ? (
-    <LoadingMessage>Loading</LoadingMessage>
-  ) : (
-    <List
-      containerHeight={1000}
-      elementHeight={200}
-      infiniteLoadBeginEdgeOffset={50}
-      onInfiniteLoad={handleInfiniteLoad}
-    >
-      {map(
-        id => (
-          <Link key={id} to={toFullscreenViewUrl(id)}>
-            <GifThumbnail id={id} />
-          </Link>
-        ),
-        gifIds
+  return (
+    <>
+      <SearchBar />
+      {isLoading ? (
+        <LoadingMessage>Loading</LoadingMessage>
+      ) : (
+        <List
+          containerHeight={1000}
+          elementHeight={200}
+          infiniteLoadBeginEdgeOffset={50}
+          onInfiniteLoad={handleInfiniteLoad}
+        >
+          {map(
+            id => (
+              <Link key={id} to={toFullscreenViewUrl(id)}>
+                <GifThumbnail id={id} />
+              </Link>
+            ),
+            gifIds
+          )}
+        </List>
       )}
-    </List>
+    </>
   );
 };
 
