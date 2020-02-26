@@ -1,5 +1,6 @@
 import { createSelector } from "reselect";
 import { GifListSelectorState } from "./redux";
+import { toListTitle } from "./models";
 
 const getGifList = (state: GifListSelectorState) => state.gifList;
 
@@ -23,4 +24,8 @@ export const getIsLoadingMoreGifs = createSelector(
 export const getCurrentGifsOffset = createSelector(
   getGifPagination,
   pagination => pagination.offset
+);
+
+export const getCurrentListTitle = createSelector(getGifList, gifList =>
+  toListTitle(gifList.listType)
 );

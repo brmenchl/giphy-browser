@@ -3,9 +3,11 @@ import {
   getAllGifIds,
   getIsLoadingMoreGifs,
   getCurrentGifsOffset,
-  getIsLoadingGifs
+  getIsLoadingGifs,
+  getCurrentListTitle
 } from "./selectors";
 import { toRandomGifListReducerState } from "./doubles";
+import { toTrendingListType, toQueryListType } from "./models";
 
 describe("gif selectors", () => {
   describe("getAllGifIds", () => {
@@ -44,6 +46,26 @@ describe("gif selectors", () => {
         })
       };
       expect(getCurrentGifsOffset(state)).toEqual(30);
+    });
+  });
+
+  describe("getCurrentListTitle", () => {
+    it("should return trending list title", () => {
+      const state = {
+        gifList: toRandomGifListReducerState({
+          listType: toTrendingListType()
+        })
+      };
+      expect(getCurrentListTitle(state)).toEqual("Trending GIFs");
+    });
+
+    it("should return query list title", () => {
+      const state = {
+        gifList: toRandomGifListReducerState({
+          listType: toQueryListType("oh wow")
+        })
+      };
+      expect(getCurrentListTitle(state)).toEqual("GIFs matching oh wow");
     });
   });
 });

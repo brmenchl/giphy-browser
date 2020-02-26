@@ -2,18 +2,32 @@ import { times } from "ramda";
 import {
   gifListReducer,
   loadGifsSuccess,
-  loadGifs,
+  loadTrendingGifs,
   loadMoreGifs,
-  loadMoreGifsSuccess
+  loadMoreGifsSuccess,
+  loadGifsByQuery
 } from "./redux";
 import { toRandomGif } from "../gifs/doubles";
 import { toRandomGifListReducerState } from "./doubles";
+import { toQueryListType, toTrendingListType } from "./models";
 
 describe("gif list reducer", () => {
-  it("should set is loading to true on load action", () => {
-    const state = toRandomGifListReducerState();
-    expect(gifListReducer(state, loadGifs())).toEqual({
+  it("should set is loading to true and set list type to trending on load trending action", () => {
+    const state = toRandomGifListReducerState({
+      listType: toQueryListType("lol")
+    });
+    expect(gifListReducer(state, loadTrendingGifs())).toEqual({
       ...state,
+      listType: toTrendingListType(),
+      isLoading: true
+    });
+  });
+
+  it("should set is loading to true and set list type to query on load by query action", () => {
+    const state = toRandomGifListReducerState();
+    expect(gifListReducer(state, loadGifsByQuery("sup"))).toEqual({
+      ...state,
+      listType: toQueryListType("sup"),
       isLoading: true
     });
   });
@@ -39,6 +53,7 @@ describe("gif list reducer", () => {
     const newGifs = times(idx => toRandomGif({ id: `id${idx}` }), 5);
     const state = toRandomGifListReducerState({ ids: [], isLoading: true });
     expect(gifListReducer(state, loadGifsSuccess(newGifs))).toEqual({
+      ...state,
       isLoading: false,
       ids: ["id0", "id1", "id2", "id3", "id4"],
       pagination: {

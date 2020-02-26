@@ -7,7 +7,7 @@ import {
   GifListActionTypes,
   loadMoreGifsSuccess,
   loadGifsByQuery,
-  loadGifs
+  loadTrendingGifs
 } from "./redux";
 import { getCurrentGifsOffset } from "./selectors";
 
@@ -28,11 +28,11 @@ export const loadGifsSaga = function*(
 };
 
 export const paginationManagerSaga = function*(
-  action: ReturnType<typeof loadGifs | typeof loadGifsByQuery>
+  action: ReturnType<typeof loadTrendingGifs | typeof loadGifsByQuery>
 ) {
   try {
     const fetchGifs =
-      action.type === GifListActionTypes.Load
+      action.type === GifListActionTypes.LoadTrending
         ? fetchTrendingGifs
         : fetchGifsByQuery(action.payload.query);
 
@@ -55,7 +55,7 @@ export const paginationManagerSaga = function*(
 
 export const gifListWatcherSaga = function*() {
   yield takeLatest(
-    [GifListActionTypes.Load, GifListActionTypes.LoadByQuery],
+    [GifListActionTypes.LoadTrending, GifListActionTypes.LoadByQuery],
     paginationManagerSaga
   );
 };

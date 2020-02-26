@@ -1,17 +1,22 @@
 import { Reducer } from "redux";
-import { PaginatedGifs } from "./models";
+import {
+  PaginatedGifs,
+  ListType,
+  toTrendingListType,
+  toQueryListType
+} from "./models";
 import { Gif } from "../gifs";
 
 export enum GifListActionTypes {
-  Load = "gifs/list/load",
+  LoadTrending = "gifs/list/loadTrending",
   LoadByQuery = "gifs/list/loadByQuery",
   LoadMore = "gifs/list/loadMore",
   LoadSuccess = "gifs/list/loadSuccess",
   LoadMoreSuccess = "gifs/list/loadMoreSuccess"
 }
 
-export const loadGifs = () => ({
-  type: GifListActionTypes.Load as const
+export const loadTrendingGifs = () => ({
+  type: GifListActionTypes.LoadTrending as const
 });
 
 export const loadGifsByQuery = (query: string) => ({
@@ -34,7 +39,8 @@ export const loadMoreGifsSuccess = (paginatedGifs: PaginatedGifs) => ({
 });
 
 type GifListAction = ReturnType<
-  | typeof loadGifs
+  | typeof loadTrendingGifs
+  | typeof loadGifsByQuery
   | typeof loadMoreGifs
   | typeof loadGifsSuccess
   | typeof loadMoreGifsSuccess
@@ -47,6 +53,7 @@ type Pagination = {
 
 export type GifListState = {
   isLoading: boolean;
+  listType: ListType;
   ids: string[];
   pagination: Pagination;
 };
@@ -57,6 +64,7 @@ export type GifListSelectorState = {
 
 const initialState: GifListState = {
   isLoading: false,
+  listType: toTrendingListType(),
   ids: [],
   pagination: {
     isLoading: false,
@@ -69,9 +77,15 @@ export const gifListReducer: Reducer<GifListState, GifListAction> = (
   action
 ) => {
   switch (action.type) {
-    case GifListActionTypes.Load:
+    case GifListActionTypes.LoadTrending:
+    case GifListActionTypes.LoadByQuery:
+      const listType =
+        action.type === GifListActionTypes.LoadTrending
+          ? toTrendingListType()
+          : toQueryListType(action.payload.query);
       return {
         ...state,
+        listType: listType,
         isLoading: true
       };
     case GifListActionTypes.LoadMore:

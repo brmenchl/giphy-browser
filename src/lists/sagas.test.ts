@@ -10,7 +10,7 @@ import {
   loadGifsSuccess,
   loadMoreGifs,
   loadMoreGifsSuccess,
-  loadGifs,
+  loadTrendingGifs,
   loadGifsByQuery
 } from "./redux";
 import { paginationManagerSaga, loadGifsSaga } from "./sagas";
@@ -24,7 +24,7 @@ describe("paginationManagerSaga", () => {
         gifs
       };
 
-      return expectSaga(paginationManagerSaga, loadGifs())
+      return expectSaga(paginationManagerSaga, loadTrendingGifs())
         .provide([[Matchers.call.fn(fetchTrendingGifs), paginatedGifs]])
         .call(fetchTrendingGifs, 0)
         .put(loadGifsSuccess(gifs))
@@ -54,7 +54,7 @@ describe("paginationManagerSaga", () => {
         .mockReturnValueOnce(paginatedGifs3);
 
       return (
-        expectSaga(paginationManagerSaga, loadGifs())
+        expectSaga(paginationManagerSaga, loadTrendingGifs())
           .provide([
             [Matchers.call.fn(fetchTrendingGifs), dynamic(mockGifResponse)],
             [Matchers.select(getCurrentGifsOffset), 0]
