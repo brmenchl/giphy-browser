@@ -3,4 +3,3 @@ export { gifsWatcherSaga } from "./sagas";
 export * from "./models";
 export * from "./selectors";
 export * from "./GifThumbnail";
-export * from "./FullScreenView";

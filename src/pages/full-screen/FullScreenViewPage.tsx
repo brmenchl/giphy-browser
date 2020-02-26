@@ -2,10 +2,9 @@ import React, { useCallback, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RouteComponentProps } from "react-router";
 import styled from "styled-components/macro";
-import { loadGifById } from "./redux";
-import { toGetGifById } from "./selectors";
+import { loadGifById, toGetGifById } from "../../gifs";
 
-export const FullScreenView: React.FC<RouteComponentProps<{
+export const FullScreenViewPage: React.FC<RouteComponentProps<{
   id: string;
 }>> = props => {
   const id = props.match.params.id;

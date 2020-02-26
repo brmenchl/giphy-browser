@@ -8,10 +8,8 @@ import {
 } from "react-router-dom";
 import { StyleReset, GlobalStyles } from "./styles";
 import { store } from "./store";
-import { gifListUrlScheme } from "./lists/urls";
-import { fullscreenViewUrlScheme } from "./gifs/urls";
-import { GifList } from "./lists";
-import { FullScreenView } from "./gifs";
+import { HomePage, FullScreenViewPage } from "./pages";
+import { fullscreenViewUrlScheme, gifListUrlScheme } from "./pages/urls";
 
 const App = () => (
   <>
@@ -20,8 +18,11 @@ const App = () => (
     <Provider store={store}>
       <Router>
         <Switch>
-          <Route exact path={gifListUrlScheme} component={GifList} />
-          <Route path={fullscreenViewUrlScheme} component={FullScreenView} />
+          <Route exact path={gifListUrlScheme} component={HomePage} />
+          <Route
+            path={fullscreenViewUrlScheme}
+            component={FullScreenViewPage}
+          />
           <Redirect to={gifListUrlScheme} />
         </Switch>
       </Router>

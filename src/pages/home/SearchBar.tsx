@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useRef, useEffect } from "react";
 import styled from "styled-components/macro";
 import { useDispatch } from "react-redux";
-import { loadGifsByQuery, loadGifs } from "./redux";
+import { loadGifsByQuery, loadTrendingGifs } from "../../lists";
 
 export const SearchBar: React.FC = () => {
   const dispatch = useDispatch();
@@ -10,7 +10,7 @@ export const SearchBar: React.FC = () => {
 
   const clearValue = useCallback(() => {
     setValue("");
-    dispatch(loadGifs());
+    dispatch(loadTrendingGifs());
   }, [setValue, dispatch]);
 
   const handleChange = useCallback(
@@ -39,8 +39,8 @@ export const SearchBar: React.FC = () => {
       <Label>
         Search by Tag:
         <Input type="text" value={value} onChange={handleChange} />
+        <ClearButton onClick={clearValue}>X</ClearButton>
       </Label>
-      <ClearButton onClick={clearValue}>X</ClearButton>
     </>
   );
 };
