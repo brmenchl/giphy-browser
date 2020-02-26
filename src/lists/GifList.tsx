@@ -25,21 +25,25 @@ export const GifList: React.FC = () => {
 
   return (
     <>
-      <SearchBar />
+      <StickyHeader>
+        <SearchBar />
+      </StickyHeader>
       {isLoading ? (
         <LoadingMessage>Loading</LoadingMessage>
       ) : (
         <List
-          containerHeight={1000}
-          elementHeight={200}
+          useWindowAsScrollContainer
+          elementHeight={420}
           infiniteLoadBeginEdgeOffset={50}
           onInfiniteLoad={handleInfiniteLoad}
         >
           {map(
             id => (
-              <Link key={id} to={toFullscreenViewUrl(id)}>
-                <GifThumbnail id={id} />
-              </Link>
+              <ListItem key={id}>
+                <Link to={toFullscreenViewUrl(id)}>
+                  <GifThumbnail id={id} />
+                </Link>
+              </ListItem>
             ),
             gifIds
           )}
@@ -49,13 +53,32 @@ export const GifList: React.FC = () => {
   );
 };
 
-const List = styled(Infinite)`
-  overflow: auto;
-  width: 50%;
-  margin: auto;
+const ListItem = styled.div`
   display: flex;
-  flex-direction: column;
   align-items: center;
+  justify-content: center;
+  padding-top: 10px;
+  padding-bottom: 10px;
+`;
+
+const List = styled(Infinite)`
+  max-width: 1000px;
+  width: 100%;
+  margin: auto;
+  padding-left: 50px;
+  padding-right: 50px;
+`;
+
+const StickyHeader = styled.div`
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: center;
+  padding-left: 20px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  background-color: grey;
+  box-shadow: 0 5px 8px rgba(0, 0, 0, 0.2);
 `;
 
 const LoadingMessage = styled.h1``;

@@ -1,11 +1,17 @@
 import React, { useState, useCallback, useRef, useEffect } from "react";
+import styled from "styled-components/macro";
 import { useDispatch } from "react-redux";
-import { loadGifsByQuery } from "./redux";
+import { loadGifsByQuery, loadGifs } from "./redux";
 
 export const SearchBar: React.FC = () => {
   const dispatch = useDispatch();
   const [value, setValue] = useState("");
   const debounceTimeoutId = useRef<number>();
+
+  const clearValue = useCallback(() => {
+    setValue("");
+    dispatch(loadGifs());
+  }, [setValue, dispatch]);
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,9 +35,39 @@ export const SearchBar: React.FC = () => {
   }, [value, dispatch]);
 
   return (
-    <label>
-      Search by Tag:
-      <input type="text" value={value} onChange={handleChange} />
-    </label>
+    <>
+      <Label>
+        Search by Tag:
+        <Input type="text" value={value} onChange={handleChange} />
+      </Label>
+      <ClearButton onClick={clearValue}>X</ClearButton>
+    </>
   );
 };
+
+const ClearButton = styled.button`
+  align-items: center;
+  border-radius: 50%;
+  display: inline-flex;
+  height: 20px;
+  justify-content: center;
+  width: 20px;
+  margin-left: 5px;
+`;
+
+const Input = styled.input`
+  border-radius: 5px;
+  border: 3px solid darkgray;
+  color: darkgray;
+  height: 20px;
+  margin-left: 5px;
+  outline: none;
+  padding: 5px;
+  width: 400px;
+
+  &:focus {
+    color: black;
+  }
+`;
+
+const Label = styled.label``;

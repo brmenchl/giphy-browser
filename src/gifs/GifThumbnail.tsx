@@ -10,10 +10,12 @@ type Props = {
 export const GifThumbnail: React.FC<Props> = props => {
   const getGifById = useCallback(toGetGifById(props.id), [props.id]);
   const gif = useSelector(getGifById);
-  return !!gif?.data ? <Image src={gif.data.images.thumb} /> : null;
+  return !!gif?.data ? (
+    <Image src={gif.data.images.thumb} alt={gif.data.title} />
+  ) : null;
 };
 
 const Image = styled.img`
-  width: 100%;
-  height: 200px;
+  max-height: 100%;
+  max-width: 100%;
 `;

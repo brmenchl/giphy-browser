@@ -6,7 +6,7 @@ import {
   Route,
   Redirect
 } from "react-router-dom";
-import { StyleReset } from "./styles";
+import { StyleReset, GlobalStyles } from "./styles";
 import { store } from "./store";
 import { gifListUrlScheme } from "./lists/urls";
 import { fullscreenViewUrlScheme } from "./gifs/urls";
@@ -16,6 +16,7 @@ import { FullScreenView } from "./gifs";
 const App = () => (
   <>
     <StyleReset />
+    <GlobalStyles />
     <Provider store={store}>
       <Router>
         <Switch>
