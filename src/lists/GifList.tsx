@@ -39,11 +39,11 @@ export const GifList: React.FC = () => {
         >
           {map(
             id => (
-              <ListItem key={id}>
-                <Link to={toFullscreenViewUrl(id)}>
+              <FullscreenLink key={id} to={toFullscreenViewUrl(id)}>
+                <ListItem key={id}>
                   <GifThumbnail id={id} />
-                </Link>
-              </ListItem>
+                </ListItem>
+              </FullscreenLink>
             ),
             gifIds
           )}
@@ -53,12 +53,15 @@ export const GifList: React.FC = () => {
   );
 };
 
+const FullscreenLink = styled(Link)``;
+
 const ListItem = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   padding-top: 10px;
   padding-bottom: 10px;
+  height: 420px;
 `;
 
 const List = styled(Infinite)`
